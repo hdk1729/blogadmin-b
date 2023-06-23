@@ -1,46 +1,39 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
-import  morgan from 'morgan';
-import postRouter from "./routers/post.js";
 import cors from 'cors';
+import ErrorMiddleware from "./middleware/error.js";
+import CookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 
-import bodyParser from "body-parser";
+//routes
+import postRouter from "./routers/post.js";
+
+
 const app = express();
 
-
-dotenv.config();
-
-
-mongoose.set("strictQuery", false);
-const connect = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO);
-    console.log("MongoDB connected");
-  } catch (error) {
-    throw error;
-  }
-};
-
-mongoose.connection.on("disconnected", () => {
-  console.log("mongoDB disconnected!");
-});
+// config
+dotenv.config({ path: "./config/config.env" });
 
 
-//var postRouter =require("./routers/post");
+// CORS
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 
-app.use(morgan("dev"));
-app.use(bodyParser.json());
-app.use(cors({origin:"http://localhost:3000"}));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(CookieParser());
+app.use(fileUpload());
+
 
 app.use("/api/post",postRouter);
-app.use((err,req,res,next) => {
-     res.status(500).json({ error: err.message });
-});
-//listen on port 8000
-var PORT =process.env.PORT ;
-app.listen(PORT,  ()  =>{
-    connect()
-    console.log("port is listening on " +PORT);
-});
+
+
+
+// Custom Error Middleware
+app.use(ErrorMiddleware);
+
+export default app;
