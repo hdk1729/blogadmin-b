@@ -9,41 +9,48 @@ const postSchema = new mongoose.Schema({
     },
     content:{
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
-    meta:{
-        type: String,
-        required: true,
-        trim: true
+    thumbnail: {
+        public_id: String,
+        url: String,
+    },    
+    // meta:{
+    //     type: String,
+    //     required: true,
+    //     trim: true
 
-    },
+    // },
     tags:[String],
-    authors:{
-        type: String,
-        default: "Admin",
-        ref: 'Auth',
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
-    slug:{
+    subheading:{
         type: String,
-        required: true,
-        trim: true,
-        unique: true
     },
-    thumbnail:{
-        type:Object,
-        url:{
-            type: URL,
-            
+    likes: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
         },
-        public_id:{
+    ],
+    comments: [
+        {
+          user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+          comment: {
             type: String,
-        
+            required: true,
+          },
         },
+    ],
+    createdAt: {
+        type: Date,
+        default: Date.now,
     },
-},
-    {
-        timestamps: true,
-    },
+}
 );
 export default mongoose.model("Post", postSchema);

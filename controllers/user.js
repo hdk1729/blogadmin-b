@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import Post from "../models/post.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import ApiFeatures from "../utils/apifeatures.js";
 import cookie from "cookie";
 import sendToken from "../utils/jwtToken.js";
 import ErrorHandler from "../utils/errorHandler.js";
@@ -70,4 +71,127 @@ export const login = async (req, res) => {
   }
 };
 
+
+//My Profile
+export const myProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate(
+      "posts"
+    );
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+//Get User Profile
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate(
+      "posts"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+//Get All Users
+export const getAllUsers = async (req, res) => {
+  const apiFeatures = new ApiFeatures(User.find(), req.query).search().filter();
+  try {
+    const users = await apiFeatures.query;
+
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+//Get My Posts
+export const getMyPost = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    const posts = [];
+
+    for (let i = 0; i < user.posts.length; i++) {
+      const post = await Post.findById(user.posts[i]).populate(
+        "likes comments.user owner"
+      );
+      posts.push(post);
+    }
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+//Get User Posts
+export const getUserPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    const posts = [];
+
+    for (let i = 0; i < user.posts.length; i++) {
+      const post = await Post.findById(user.posts[i]).populate(
+        "likes comments.user owner"
+      );
+      if (user.setPublic && post.publicPost) {
+        posts.push(post);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
