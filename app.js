@@ -6,7 +6,7 @@ import CookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 
 //routes
-//import postRouter from "./routers/post.js";
+import postRouter from "./routers/post.js";
 import userRouter from "./routers/user.js";
 
 
@@ -32,6 +32,7 @@ app.use(fileUpload());
 
 
 app.use("/api/user",userRouter);
+app.use("/api/post",postRouter);
 
 
 
