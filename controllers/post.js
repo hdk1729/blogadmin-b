@@ -313,11 +313,14 @@ export const deleteComment = async(req, res) => {
 export const getallPost = async (req,res)=>{
   const apiFeatures = new ApiFeatures(Post.find(), req.query).search().filter();
     try{
-      const post = await apiFeatures.query;
+      apiFeatures.query = apiFeatures.query.sort({ createdAt: -1 });
+
+    // Execute the query
+       const posts = await apiFeatures.query;
         //const post = await Post.find().populate("owner");
         res.status(200).json({
           success: true,
-          post,
+          posts,
         });
     } catch (error) {
         res.status(500).json({
