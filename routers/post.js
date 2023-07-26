@@ -19,21 +19,21 @@ const router = express.Router();
 }*/
 
 
-router.post("/upload", isAuthenticatedUser, createPost);
+router.post("/upload", createPost);
 
-router.get("/like/:id", isAuthenticatedUser, likeUnlikePost);
+router.get("/like/:id", likeUnlikePost);
 
-router.put("/:id", isAuthenticatedUser, updatePostDesc);
+router.put("/:id", updatePostDesc);
 
-router.delete("/:id", isAuthenticatedUser, deletePost);
+router.delete("/:id", deletePost);
 
-router.put("/comment/:id", isAuthenticatedUser, commentOnPost);
+router.put("/comment/:id", commentOnPost);
 
-router.delete("/comment/:id/:commentId", isAuthenticatedUser, deleteComment);
+router.delete("/comment/:id/:commentId", deleteComment);
 
-router.get("/posts", isAuthenticatedUser, getallPost);
+router.get("/posts", getallPost);
 
-router.get("/:id", isAuthenticatedUser, getPost);
+router.get("/:id", getPost);
 
 
 
