@@ -6,8 +6,21 @@ import ApiFeatures from "../utils/apifeatures.js";
 import cookie from "cookie";
 import sendToken from "../utils/jwtToken.js";
 import ErrorHandler from "../utils/errorHandler.js";
+import RSVP from "../models/rsvp.js";
 
-
+//RSVP
+export const rsvp = async (req, res) => {
+  try {
+    const { name, email, isjoining } = req.body;
+  
+    const rsvp = new RSVP({ name, email, isjoining });
+    await rsvp.save();
+    res.status(201).json({ message: 'RSVP successfully submitted.' });
+  } catch (error) {
+      console.error('Error submitting RSVP:', error);
+      res.status(500).json({ message: 'Error submitting RSVP.' });
+  }
+};
 
 //Register
 export const register = async (req, res) => {

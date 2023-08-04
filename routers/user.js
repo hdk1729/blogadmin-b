@@ -6,7 +6,8 @@ import {
   getMyPost,
   getUserPosts,
   getUserProfile,
-  getAllUsers
+  getAllUsers,
+  rsvp,
   
 } from "../controllers/user.js";
 import { isAuthenticatedUser } from "../middleware/auth.js";
@@ -14,6 +15,8 @@ import { isAuthenticatedUser } from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/register", register);
+
+router.post("/rsvp", rsvp);
 
 router.post("/login", login);
 
