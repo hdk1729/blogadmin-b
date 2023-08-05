@@ -2,20 +2,16 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const rsvpSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true,
-        trim: true
-    },
-    email:{
-        type: String,
-        required: true,
-        unique:true,
-        validate: [validator.isEmail, "Please enter a valid email address"]
-    },
     isjoining:{
         type: Boolean,
         required: true
+    },
+    location: {
+        type: String,
+        default: 'Unknown',
+    },
+    ip: {
+        type: String,
     },
     timestamp: {
         type: Date,

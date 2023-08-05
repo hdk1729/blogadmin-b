@@ -7,20 +7,33 @@ import cookie from "cookie";
 import sendToken from "../utils/jwtToken.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import RSVP from "../models/rsvp.js";
+import geoip from "geoip-lite";
 
 //RSVP
+import geoip from 'geoip-lite';
+
 export const rsvp = async (req, res) => {
   try {
-    const { name, email, isjoining } = req.body;
-  
-    const rsvp = new RSVP({ name, email, isjoining });
+    const { isjoining } = req.body;
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    
+    const geo = geoip.lookup(ip);
+    const location = geo ? `${geo.city}, ${geo.region}, ${geo.country}` : 'Unknown';
+
+    const rsvp = new RSVP({
+      isjoining,
+      location,
+      ip,
+    });
+
     await rsvp.save();
     res.status(201).json({ message: 'RSVP successfully submitted.' });
   } catch (error) {
-      console.error('Error submitting RSVP:', error);
-      res.status(500).json({ message: 'Error submitting RSVP.' });
+    console.error('Error submitting RSVP:', error);
+    res.status(500).json({ message: 'Error submitting RSVP.' });
   }
 };
+
 
 //Register
 export const register = async (req, res) => {
