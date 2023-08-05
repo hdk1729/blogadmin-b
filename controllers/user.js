@@ -7,7 +7,6 @@ import cookie from "cookie";
 import sendToken from "../utils/jwtToken.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import RSVP from "../models/rsvp.js";
-import geoip from "geoip-lite";
 
 //RSVP
 import geoip from 'geoip-lite';
