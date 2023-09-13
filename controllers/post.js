@@ -358,3 +358,33 @@ export const getPost = async (req, res) => {
     });
   }
 };
+
+
+
+// Get All Posts by Likes
+export const getPostsByLikes = async (req, res) => {
+  try {
+    console.log("here");
+    const posts = await Post.aggregate([
+      {
+        $addFields: {
+          likeCount: { $size: "$likes" },
+        },
+      },
+      {
+        $sort: { likeCount: -1 }, 
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+

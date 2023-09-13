@@ -1,4 +1,4 @@
-import {createPost, likeUnlikePost, deleteComment, deletePost, updatePostDesc, commentOnPost, getallPost, getPost} from "../controllers/post.js";
+import {createPost, likeUnlikePost, deleteComment, deletePost, updatePostDesc, getPostsByLikes, commentOnPost, getallPost, getPost} from "../controllers/post.js";
 import express from "express";
 import { isAuthenticatedUser } from "../middleware/auth.js";
 //import multer from "../middleware/multer.js";
@@ -19,9 +19,9 @@ const router = express.Router();
 }*/
 
 
-router.post("/upload", createPost);
+router.post("/upload", isAuthenticatedUser, createPost);
 
-router.get("/like/:id", likeUnlikePost);
+router.get("/like/:id",isAuthenticatedUser, likeUnlikePost);
 
 router.put("/:id", updatePostDesc);
 
@@ -33,7 +33,10 @@ router.delete("/comment/:id/:commentId", deleteComment);
 
 router.get("/posts", getallPost);
 
+router.get("/trending", getPostsByLikes);
+
 router.get("/:id", getPost);
+
 
 
 
